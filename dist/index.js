@@ -53,7 +53,7 @@ function compileSprite(writeToFile, what) {
             fontAwesomeResult = fontAwesomePrepare(fontAwesomeList);
         }
     }
-    let allInjectiion = materialResult + fontAwesomeResult;
-    fs_1.writeFileSync(writeToFile, svgTemplate(allInjectiion));
+    let allInjection = materialResult + fontAwesomeResult;
+    fs_1.writeFileSync(writeToFile, svgTemplate(allInjection));
 }
 exports.compileSprite = compileSprite;

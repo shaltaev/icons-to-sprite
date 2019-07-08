@@ -61,6 +61,6 @@ export function compileSprite(writeToFile: string, what: {material?: string | Li
             fontAwesomeResult = fontAwesomePrepare(fontAwesomeList)
         }
     }  
-    let allInjectiion: string = materialResult + fontAwesomeResult
-    writeFileSync(writeToFile, svgTemplate(allInjectiion))
+    let allInjection: string = materialResult + fontAwesomeResult
+    writeFileSync(writeToFile, svgTemplate(allInjection))
 }
