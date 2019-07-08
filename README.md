@@ -47,6 +47,9 @@ var iconsTS = require("icons-to-sprite");
 iconsTS.compileSprite('./src/sprite.svg', { material: './scripts/sprite/material.txt', fontAwesome: './scripts/sprite/font_awesome.txt' });
 ```
 
+```sh
+node ./scripts/prepare-sprite.js
+```
 #### Into your App
 Please replace sprite.svg (below) to right way (from ./scripts/prepare-sprite.js) in your project
 

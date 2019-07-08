@@ -2,3 +2,5 @@ node_modules
 material.txt
 font_awesome.txt
 sprite.svg
+demo.html
+yarn.lock

@@ -1,6 +1,6 @@
 {
   "name": "icons-to-sprite",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "main": "dist/index.js",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
   "private": false,
@@ -13,6 +13,10 @@
   "scripts": {
     "tsc:watch": "tsc -w"
   },
+  "bugs": {
+    "url": "https://github.com/shaltaev/icons-to-sprite/issues"
+  },
+  "homepage": "https://github.com/shaltaev/icons-to-sprite",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
     "material-design-icons": "^3.0.1"
