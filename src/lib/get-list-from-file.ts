@@ -1,10 +1,7 @@
 import { readFileSync } from 'fs'
+import { List } from '../types/List';
 
-export type List = {
-    [K: string]: string[]
-}
-
-export const getList = (fileName: string): List => {
+export const getListFromFile = (fileName: string): List => {
     let result: List = {}
 
     const fileAsString = readFileSync(fileName, {encoding: 'utf-8'})

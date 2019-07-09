@@ -1,56 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const getList_1 = require("./getList");
-const extractFromSource_1 = require("./extractFromSource");
+const get_list_from_file_1 = require("./lib/get-list-from-file");
 const fs_1 = require("fs");
+const compute_local_injection_1 = require("./handlers/material/compute-local-injection");
+const compute_local_injection_2 = require("./handlers/font_awesome_free/compute-local-injection");
 function svgTemplate(inject) {
     return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${inject}</svg>`;
-}
-function iconMaterialTemplate(iconName, iconPath) {
-    return `<symbol id="material_${iconName}" viewBox="0 0 24 24">${iconPath}</symbol>`;
-}
-function iconFontAwesomeTemplate(iconName, iconPath, viewBox) {
-    return `<symbol id="fa_${iconName}" viewBox="${viewBox}">${iconPath}</symbol>`;
-}
-function materialPrepare(list) {
-    let materialInject = '';
-    for (const iconGroup in list) {
-        if (list.hasOwnProperty(iconGroup)) {
-            const iconGroupInstance = list[iconGroup];
-            iconGroupInstance.forEach((iconName) => {
-                const iconPath = extractFromSource_1.getPathMaterial(iconGroup, iconName);
-                materialInject = materialInject.concat(iconMaterialTemplate(iconName, iconPath));
-            });
-        }
-    }
-    return materialInject;
-}
-function fontAwesomePrepare(list) {
-    let fontAwesomeInject = '';
-    for (const iconGroup in list) {
-        if (list.hasOwnProperty(iconGroup)) {
-            const iconGroupInstance = list[iconGroup];
-            iconGroupInstance.forEach((iconName) => {
-                const { iconPath, iconViewBox } = extractFromSource_1.getPathAndViewBoxFontAwesome(iconGroup, iconName);
-                fontAwesomeInject = fontAwesomeInject.concat(iconFontAwesomeTemplate(iconName, iconPath, iconViewBox));
-            });
-        }
-    }
-    return fontAwesomeInject;
 }
 function compileSprite(writeToFile, what) {
     let materialResult = '';
     if ('material' in what) {
         if (typeof what.material === 'string') {
-            const materialList = getList_1.getList(what.material);
-            materialResult = materialPrepare(materialList);
+            const materialList = get_list_from_file_1.getListFromFile(what.material);
+            materialResult = compute_local_injection_1.computeLocalInjection(materialList);
         }
     }
     let fontAwesomeResult = '';
     if ('fontAwesome' in what) {
         if (typeof what.fontAwesome === 'string') {
-            const fontAwesomeList = getList_1.getList(what.fontAwesome);
-            fontAwesomeResult = fontAwesomePrepare(fontAwesomeList);
+            const fontAwesomeList = get_list_from_file_1.getListFromFile(what.fontAwesome);
+            fontAwesomeResult = compute_local_injection_2.computeLocalInjection(fontAwesomeList);
         }
     }
     let allInjection = materialResult + fontAwesomeResult;

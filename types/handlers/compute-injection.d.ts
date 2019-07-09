@@ -1,0 +1,1 @@
+export declare const computeInjection: (getIconContent: import("../types/IconContent").getIconContentType, computeIconTemplate: import("./compute-icon-template").computeLocalIconTemplateType) => (list: import("../types/List").List) => string;

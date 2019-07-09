@@ -1,7 +1,8 @@
 {
   "name": "icons-to-sprite",
-  "version": "0.0.9",
-  "main": "dist/index.js",
+  "version": "0.0.10",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "author": "shaltaev <shaltaev.gleb@gmail.com>",
   "private": false,
   "license": "MIT",
@@ -11,6 +12,7 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
+    "build": "rm -r ./dist/* && rm -r ./types/* && tsc",
     "tsc:watch": "tsc -w"
   },
   "bugs": {
