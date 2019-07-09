@@ -19,6 +19,7 @@ yarn add -D icons-to-sprite
 ### Usage
 
 #### Prepare Sprite
+For now only material-design-icons & font-awesome-free is available for shrink
 
 This is example of ./scripts/sprite/material.txt
 material_group >>> material_icon_name
