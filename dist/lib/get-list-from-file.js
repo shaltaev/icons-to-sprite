@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
-exports.getListFromFile = (fileName) => {
-    let result = {};
+function getListFromFile(fileName) {
+    const result = {};
     const fileAsString = fs_1.readFileSync(fileName, { encoding: 'utf-8' });
     const lines = fileAsString.split(/\r?\n/);
     lines.forEach((line) => {
@@ -15,4 +15,5 @@ exports.getListFromFile = (fileName) => {
         }
     });
     return result;
-};
+}
+exports.getListFromFile = getListFromFile;

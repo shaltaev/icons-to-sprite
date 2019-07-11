@@ -1,14 +1,15 @@
 import { readFileSync } from 'fs'
-import { List } from '../types/List';
 
-export const getListFromFile = (fileName: string): List => {
-    let result: List = {}
+type List = import('../types/List').List
 
-    const fileAsString = readFileSync(fileName, {encoding: 'utf-8'})
-    const lines = fileAsString.split(/\r?\n/)
+export function getListFromFile(fileName: string): List {
+    const result: List = {}
 
-    lines.forEach((line) => {    
-        const lineParse = line.split(' >>> ')            
+    const fileAsString: string = readFileSync(fileName, {encoding: 'utf-8'})
+    const lines: string[] = fileAsString.split(/\r?\n/)
+
+    lines.forEach((line: string) => {    
+        const lineParse: string[] = line.split(' >>> ')            
         if ((0 in lineParse) && (1 in lineParse)) {
             if (!(lineParse[0] in result)) {                    
                 result[lineParse[0]] = []

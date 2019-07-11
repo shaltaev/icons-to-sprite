@@ -1,2 +1,3 @@
-import { List } from '../types/List';
-export declare const getListFromFile: (fileName: string) => List;
+declare type List = import('../types/List').List;
+export declare function getListFromFile(fileName: string): List;
+export {};

@@ -22,7 +22,7 @@ function compileSprite(writeToFile, what) {
             fontAwesomeResult = compute_local_injection_2.computeLocalInjection(fontAwesomeList);
         }
     }
-    let allInjection = materialResult + fontAwesomeResult;
+    const allInjection = materialResult + fontAwesomeResult;
     fs_1.writeFileSync(writeToFile, svgTemplate(allInjection));
 }
 exports.compileSprite = compileSprite;

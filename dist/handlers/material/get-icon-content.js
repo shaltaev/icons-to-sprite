@@ -7,7 +7,7 @@ function getIconContent(iconGroup, iconName) {
     const iconContent = fileContent.slice(83, -6);
     return {
         iconContent,
-        iconViewBox: "0 0 24 24"
+        iconViewBox: '0 0 24 24'
     };
 }
 exports.getIconContent = getIconContent;
