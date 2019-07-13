@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "rm -r ./dist/* && rm -r ./types/* && tsc",
-    "demo": "rm -r ./test/assets && mkdir ./test/assets && node test/test.js && static-server -o test/",
+    "demo": "rm -r ./demo/assets && mkdir ./demo/assets && node demo/demo.js && static-server demo/",
     "tsc:watch": "tsc -w"
   },
   "bugs": {

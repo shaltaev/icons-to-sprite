@@ -1,0 +1,4 @@
+action >>> 3d_rotation
+action >>> alarm
+av >>> album
+av >>> airplay

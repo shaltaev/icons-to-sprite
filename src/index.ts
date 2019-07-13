@@ -1,8 +1,11 @@
 import { getListFromFile } from './lib/get-list-from-file'
 import { writeFileSync } from 'fs'
 
-import { computeLocalInjection as getMaterialInject} from './handlers/material/compute-local-injection'
-import { computeLocalInjection as getFontAwesomeInject} from './handlers/font_awesome_free/compute-local-injection'
+import { createRegistry } from './lib/icon-sets-registry'
+
+import { iconSetName as materialName, extractor as materialExtractor } from './sets/material'
+import { iconSetName as faName, extractor as faExtractor } from './sets/font-awesome-free'
+
 
 type List = import('./types/List').List
 
@@ -10,21 +13,36 @@ function svgTemplate(inject: string): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${inject}</svg>`
 }
 
-export function compileSprite(writeToFile: string, what: {material?: string | List, fontAwesome?: string | List}): void {
-    let materialResult: string = ''
-    if ('material' in what) {
+export function compileSprite(fileName: string, what: {material?: string | List, fontAwesome?: string | List}): void | Error {
+    const registry: import('./lib/icon-sets-registry').IconSetsRegistry = createRegistry()
+
+    if (what.material !== undefined) {
+        let materialList: List
         if (typeof what.material === 'string') {
-            const materialList: List = getListFromFile(what.material)
-            materialResult = getMaterialInject(materialList)
+            materialList = getListFromFile(what.material)
+        } else {
+            materialList = what.material 
         }
-    }  
-    let fontAwesomeResult: string = ''
-    if ('fontAwesome' in what) {
+        registry.setIconSet(materialName, materialExtractor)
+        registry.iconSets[materialName].loadAllIconFromList(materialList)
+    }
+
+    if (what.fontAwesome !== undefined) {
+        let fontAwesomeList: List
         if (typeof what.fontAwesome === 'string') {
-            const fontAwesomeList: List = getListFromFile(what.fontAwesome)
-            fontAwesomeResult = getFontAwesomeInject(fontAwesomeList)
+            fontAwesomeList = getListFromFile(what.fontAwesome)
+        } else {
+            fontAwesomeList = what.fontAwesome 
         }
-    }  
-    const allInjection: string = materialResult + fontAwesomeResult
-    writeFileSync(writeToFile, svgTemplate(allInjection))
+        registry.setIconSet(faName, faExtractor)
+        registry.iconSets[faName].loadAllIconFromList(fontAwesomeList)
+    }
+
+    const whatToWriteTry: string | Error = registry.packAll()
+
+    if(whatToWriteTry instanceof Error) {
+        return whatToWriteTry
+    }
+
+    writeFileSync(fileName, svgTemplate(whatToWriteTry))
 }

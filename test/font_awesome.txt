@@ -1,3 +1,0 @@
-brands >>> 500px
-regular >>> angry
-solid >>> ad
