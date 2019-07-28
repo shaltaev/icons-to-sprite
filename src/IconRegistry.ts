@@ -65,7 +65,7 @@ type IconRegistryType = {
     compileSpriteSync(): string | Error
 
     addPlugin(iconSet: string, plugin: Plugin): true | Error
-    removePlugin(): true | Error
+    removePlugin(iconSet: string): true | Error
 }
 
 /**
@@ -109,7 +109,18 @@ export class IconRegistry implements IconRegistryType {
 
         return true
     }
-    removePlugin(): Error {
-        return new Error('No implemented yet')
+
+    removePlugin(iconSet: string): true | Error {
+        if (!(iconSet in this.plugins)) {
+            return new Error('Plugin not exist in registry')
+        }
+
+        this.plugins = Object.keys(this.plugins)
+            .filter((key: string) => key !== iconSet)
+            .reduce((acc: IconRegistryType['plugins'], key: string) => {
+                return { ...acc, [key]: this.plugins[key] }
+            }, {})
+
+        return true
     }
 }

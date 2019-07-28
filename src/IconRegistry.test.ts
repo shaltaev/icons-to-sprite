@@ -1,80 +1,13 @@
-function setIteration(): number | undefined {
-    if (process.env.ITERATION === undefined) {
-        return undefined
-    }
-    const iteration: number = parseInt(process.env.ITERATION, 10)
-    if (isNaN(iteration)) {
-        return undefined
-    }
+const ITERATION: number = 2
 
-    return iteration
-}
+// tslint:disable-next-line: no-implicit-dependencies
+import { AtomicTestRegistry, iterate } from 'jest-atomic'
 
-const ITERATION: number | undefined = setIteration()
-
+// TestScope :: START
 import { IconRegistry, mockExtractor, mockExtractorSync } from './IconRegistry'
 
-// TestScope
 const reg: IconRegistry = new IconRegistry()
-
-type atomicTestRegistryType = {
-    tests: {
-        [testID: number]: {
-            message: string
-            handler: jest.ProvidesCallback
-        }
-    }
-    count: number
-
-    addTest(testID: number, message: string, handler: Function): true | Error
-    runTests(...allTest: number[]): void
-}
-
-/**
- * Registry for all test
- */
-class AtomicTestRegistry implements atomicTestRegistryType {
-    count: number
-    tests: atomicTestRegistryType['tests']
-    constructor() {
-        this.tests = {}
-        this.count = 0
-    }
-
-    addTest(
-        testID: number,
-        message: string,
-        handler: jest.ProvidesCallback
-    ): true | Error {
-        if (testID in this.tests) {
-            return new Error('Test with this id exist')
-        }
-
-        this.tests = {
-            ...this.tests,
-            [testID]: {
-                message,
-                handler
-            }
-        }
-        this.count += 1
-
-        return true
-    }
-
-    runTests(...allTest: number[]): void {
-        allTest.forEach((testID: number) => {
-            if (!(testID in this.tests)) {
-                throw new Error(`Test with ID ${testID} not found`)
-            }
-
-            test(
-                `${testID} :: ${this.tests[testID].message}`,
-                this.tests[testID].handler
-            )
-        })
-    }
-}
+// TestScope :: END
 
 const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
 
@@ -111,20 +44,22 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
     })
     testRegistry.addTest(5, 'Add plugin not implement', () => {
         expect(
-            reg.addPlugin('', {
+            reg.addPlugin('test', {
                 extractor: mockExtractor,
                 extractorSync: mockExtractorSync
             })
         ).toStrictEqual(Error('No implemented yet'))
     })
     testRegistry.addTest(6, 'Remove plugin not implements', () => {
-        expect(reg.removePlugin()).toStrictEqual(Error('No implemented yet'))
+        expect(reg.removePlugin('test')).toStrictEqual(
+            Error('No implemented yet')
+        )
     })
 }
 
-// ITERATION 1 :: Test 8 :: Added 2019-07-28
+// ITERATION 1 :: Test 7 :: Added 2019-07-28
 {
-    testRegistry.addTest(8, 'Implementation of Add Plugin', () => {
+    testRegistry.addTest(7, 'Implementation of Add Plugin', () => {
         expect(
             reg.addPlugin('test', {
                 extractor: mockExtractor,
@@ -143,46 +78,57 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
     })
 }
 
+// ITERATION 2 :: Test 8 :: Added 2019-07-28
+{
+    testRegistry.addTest(8, 'Implementation of Remove Plugin', () => {
+        if (!('test' in reg.plugins)) {
+            reg.addPlugin('test', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        }
+        expect(reg.removePlugin('test')).toBe(true)
+        expect(reg.removePlugin('test')).toStrictEqual(
+            Error('Plugin not exist in registry')
+        )
+        expect('test' in reg.plugins).toBe(false)
+    })
+}
+
 // ALL TESTS :: END
 if (ITERATION === undefined) {
     throw new Error('please set valid env ITERATION')
 }
 
-function filterArrayFromDeprecated(
-    array: number[],
-    deprecated: number[]
-): number[] {
-    function removeAllDeprecated(item: number): boolean {
-        return !deprecated.includes(item)
-    }
-
-    return array.filter(removeAllDeprecated)
-}
-
 let toTest: number[] = []
 
-if (ITERATION >= 0) {
-    const deprecatedTest: number[] = []
-    toTest = filterArrayFromDeprecated(toTest, deprecatedTest)
-    const newTest: number[] = [0, 1, 2, 3, 4, 5, 6]
-    toTest = [...toTest, ...newTest]
+toTest = iterate({
+    testRegistryShadow: testRegistry,
+    currentIterate: ITERATION,
+    iterateID: 0,
+    toTestShadow: toTest,
+    outdateTest: [],
+    newTest: [0, 1, 2, 3, 4, 5, 6],
+    iterationDescription: '000 Nothing not implement'
+})
 
-    if (ITERATION === 0) {
-        describe('000 Nothing not implement', () => {
-            testRegistry.runTests(...toTest)
-        })
-    }
-}
+toTest = iterate({
+    testRegistryShadow: testRegistry,
+    currentIterate: ITERATION,
+    iterateID: 1,
+    toTestShadow: toTest,
+    outdateTest: [5, 6],
+    newTest: [8],
+    iterationDescription: '001 Nothing not implement, except Add plugin'
+})
 
-if (ITERATION >= 1) {
-    const deprecatedTest: number[] = [5]
-    toTest = filterArrayFromDeprecated(toTest, deprecatedTest)
-    const newTest: number[] = [8]
-    toTest = [...toTest, ...newTest]
-
-    if (ITERATION === 1) {
-        describe('001 Nothing not implement, except Add plugin', () => {
-            testRegistry.runTests(...toTest)
-        })
-    }
-}
+toTest = iterate({
+    testRegistryShadow: testRegistry,
+    currentIterate: ITERATION,
+    iterateID: 2,
+    toTestShadow: toTest,
+    outdateTest: [],
+    newTest: [9],
+    iterationDescription:
+        '002 Nothing not implement, except Remove & Add plugin'
+})

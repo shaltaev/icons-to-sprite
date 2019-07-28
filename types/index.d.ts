@@ -1,1 +1,0 @@
-export { IconRegistry } from './IconRegistry';
