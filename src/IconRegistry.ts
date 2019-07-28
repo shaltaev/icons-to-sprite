@@ -15,11 +15,36 @@ type extractorSync = (
     name: string
 ) => iconExtractTry
 
+export const mockExtractorSync: extractorSync = (
+    iconSet: string,
+    group: string,
+    name: string
+): iconExtractTry => {
+    return [new Error('This is mock ExtractorSync'), undefined]
+}
+
 type extractor = (
     iconSet: string,
     group: string,
     name: string
 ) => Promise<iconExtractTry>
+
+export const mockExtractor: extractor = async (
+    iconSet: string,
+    group: string,
+    name: string
+): Promise<iconExtractTry> => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve([new Error('This is mock Extractor'), undefined])
+        }, 2000)
+    })
+}
+
+type Plugin = {
+    extractor: extractor
+    extractorSync: extractorSync
+}
 
 type IconRegistryType = {
     icons: {
@@ -28,10 +53,8 @@ type IconRegistryType = {
         } & iconMeta
     }
     plugins: {
-        [iconSet: string]: {
-            extractor: extractor
-            extractorSync: extractorSync
-        }
+        [iconSet: string]: // as Plugin Name
+        Plugin
     }
 
     // SyncMethods
@@ -41,7 +64,7 @@ type IconRegistryType = {
     getSymbolSync(iconSet: string, group: string, name: string): symbolTry
     compileSpriteSync(): string | Error
 
-    addPlugin(): true | Error
+    addPlugin(iconSet: string, plugin: Plugin): true | Error
     removePlugin(): true | Error
 }
 
@@ -71,8 +94,20 @@ export class IconRegistry implements IconRegistryType {
     compileSpriteSync(): Error {
         return new Error('No implemented yet')
     }
-    addPlugin(): Error {
-        return new Error('No implemented yet')
+    addPlugin(iconSet: string, plugin: Plugin): true | Error {
+        if (iconSet in this.plugins) {
+            return new Error('Plugin already registered')
+        }
+
+        this.plugins = {
+            ...this.plugins,
+            [iconSet]: {
+                extractor: plugin.extractor,
+                extractorSync: plugin.extractorSync
+            }
+        }
+
+        return true
     }
     removePlugin(): Error {
         return new Error('No implemented yet')

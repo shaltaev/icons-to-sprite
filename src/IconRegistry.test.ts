@@ -12,8 +12,7 @@ function setIteration(): number | undefined {
 
 const ITERATION: number | undefined = setIteration()
 
-import { IconRegistry } from './IconRegistry'
-import { log } from 'util'
+import { IconRegistry, mockExtractor, mockExtractorSync } from './IconRegistry'
 
 // TestScope
 const reg: IconRegistry = new IconRegistry()
@@ -69,7 +68,10 @@ class AtomicTestRegistry implements atomicTestRegistryType {
                 throw new Error(`Test with ID ${testID} not found`)
             }
 
-            test(this.tests[testID].message, this.tests[testID].handler)
+            test(
+                `${testID} :: ${this.tests[testID].message}`,
+                this.tests[testID].handler
+            )
         })
     }
 }
@@ -78,7 +80,7 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
 
 // ALL TESTS :: START
 
-// Added 2019-07-28
+// ITERATION 0 :: Test 0 - 6 :: Added 2019-07-28
 {
     testRegistry.addTest(0, 'Add icon not implement', () => {
         expect(reg.addIconSync('', '', '')).toStrictEqual(
@@ -108,10 +110,36 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
         )
     })
     testRegistry.addTest(5, 'Add plugin not implement', () => {
-        expect(reg.addPlugin()).toStrictEqual(Error('No implemented yet'))
+        expect(
+            reg.addPlugin('', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        ).toStrictEqual(Error('No implemented yet'))
     })
     testRegistry.addTest(6, 'Remove plugin not implements', () => {
         expect(reg.removePlugin()).toStrictEqual(Error('No implemented yet'))
+    })
+}
+
+// ITERATION 1 :: Test 8 :: Added 2019-07-28
+{
+    testRegistry.addTest(8, 'Implementation of Add Plugin', () => {
+        expect(
+            reg.addPlugin('test', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        ).toBe(true)
+
+        expect(
+            reg.addPlugin('test', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        ).toStrictEqual(Error('Plugin already registered'))
+
+        expect('test' in reg.plugins).toBe(true)
     })
 }
 
