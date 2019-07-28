@@ -87,6 +87,7 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
                 extractorSync: mockExtractorSync
             })
         }
+        expect('test' in reg.plugins).toBe(true)
         expect(reg.removePlugin('test')).toBe(true)
         expect(reg.removePlugin('test')).toStrictEqual(
             Error('Plugin not exist in registry')
@@ -118,7 +119,7 @@ toTest = iterate({
     iterateID: 1,
     toTestShadow: toTest,
     outdateTest: [5, 6],
-    newTest: [8],
+    newTest: [7],
     iterationDescription: '001 Nothing not implement, except Add plugin'
 })
 
@@ -128,7 +129,7 @@ toTest = iterate({
     iterateID: 2,
     toTestShadow: toTest,
     outdateTest: [],
-    newTest: [9],
+    newTest: [8],
     iterationDescription:
         '002 Nothing not implement, except Remove & Add plugin'
 })
