@@ -1,31 +1,53 @@
 {
-  "name": "icons-to-sprite",
-  "version": "0.0.10",
-  "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
-  "author": "shaltaev <shaltaev.gleb@gmail.com>",
-  "private": false,
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^12.0.12",
-    "static-server": "^2.2.1",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.5.2"
-  },
-  "scripts": {
-    "build": "rm -r ./dist/* && rm -r ./types/* && tsc",
-    "demo": "rm -r ./demo/assets && mkdir ./demo/assets && node demo/demo.js && static-server demo/",
-    "tsc:watch": "tsc -w"
-  },
-  "bugs": {
-    "url": "https://github.com/shaltaev/icons-to-sprite/issues"
-  },
-  "homepage": "https://github.com/shaltaev/icons-to-sprite",
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.9.0",
-    "material-design-icons": "^3.0.1"
-  }
+    "name": "icons-to-sprite",
+    "version": "0.0.10",
+    "main": "./dist/index.js",
+    "types": "./types/index.d.ts",
+    "author": "shaltaev <shaltaev.gleb@gmail.com>",
+    "private": false,
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^12.0.12",
+        "static-server": "^2.2.1",
+        "ts-node": "^8.3.0",
+        "tslint": "^5.18.0",
+        "tslint-config-prettier": "^1.18.0",
+        "tslint-microsoft-contrib": "^6.2.0",
+        "typescript": "^3.5.2"
+    },
+    "scripts": {
+        "build": "rm -r ./dist/* && rm -r ./types/* && tsc",
+        "demo": "rm -r ./demo/assets && mkdir ./demo/assets && node demo/demo.js && static-server demo/",
+        "tsc:watch": "tsc -w",
+        "test": "jest"
+    },
+    "bugs": {
+        "url": "https://github.com/shaltaev/icons-to-sprite/issues"
+    },
+    "homepage": "https://github.com/shaltaev/icons-to-sprite",
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.9.0",
+        "@types/jest": "^24.0.15",
+        "boxicons": "^2.0.2",
+        "cc-icons": "^1.0.0",
+        "dashicons": "^0.0.2",
+        "devicons": "^1.8.0",
+        "elegant-icons": "https://github.com/josephnle/elegant-icons",
+        "eva-icons-landing": "https://github.com/akveo/eva-icons/",
+        "feather-icons": "^4.22.1",
+        "font-logos": "^0.10.0",
+        "font-mfizz": "^2.4.1",
+        "geomicons-open": "^3.0.0-beta.1",
+        "heroicons-ui": "https://github.com/sschoger/heroicons-ui",
+        "ionicons": "^4.6.1",
+        "jest": "^24.8.0",
+        "material-design-iconic-font": "^2.2.0",
+        "material-design-icons": "^3.0.1",
+        "octicons": "^8.5.0",
+        "open-iconic": "^1.1.1",
+        "simple-icons": "^1.10.0",
+        "ts-jest": "^24.0.2",
+        "typicons.font": "^2.0.9",
+        "weather-icons": "^1.3.2"
+    }
 }
