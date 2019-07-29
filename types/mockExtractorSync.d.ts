@@ -1,2 +1,2 @@
-import { extractorSync } from './IconRegistry';
-export declare const mockExtractorSync: extractorSync;
+import { extractorSyncType } from './IconRegistry';
+export declare const mockExtractorSync: extractorSyncType;

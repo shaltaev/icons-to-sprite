@@ -1,21 +1,27 @@
-type Icon = import('./Icon').Icon
+type iconType = import('./Icon').iconType
 
-export type iconExtractTry = [undefined, Icon] | [Error, undefined]
-type symbolTry = [undefined, string] | [Error, undefined]
+export type iconExtractTryType = [undefined, iconType] | [Error, undefined]
+type symbolTryType = [undefined, string] | [Error, undefined]
 
-export type extractorSync = (group: string, name: string) => iconExtractTry
+export type extractorSyncType = (
+    group: string,
+    name: string
+) => iconExtractTryType
 
-export type extractor = (group: string, name: string) => Promise<iconExtractTry>
+export type extractorType = (
+    group: string,
+    name: string
+) => Promise<iconExtractTryType>
 
 type Plugin = {
-    extractor: extractor
-    extractorSync: extractorSync
+    extractor: extractorType
+    extractorSync: extractorSyncType
 }
 
 type IconRegistryType = {
     icons: {
         [fullName: string]: // `${iconSet}__${group}__${name}`
-        Icon
+        iconType
     }
     plugins: {
         [iconSet: string]: // as Plugin Name
@@ -25,8 +31,12 @@ type IconRegistryType = {
     // SyncMethods
     addIconSync(iconSet: string, group: string, name: string): true | Error
     removeIconSync(iconSet: string, group: string, name: string): true | Error
-    getIconSync(iconSet: string, group: string, name: string): iconExtractTry
-    getSymbolSync(iconSet: string, group: string, name: string): symbolTry
+    getIconSync(
+        iconSet: string,
+        group: string,
+        name: string
+    ): iconExtractTryType
+    getSymbolSync(iconSet: string, group: string, name: string): symbolTryType
 
     addPlugin(iconSet: string, plugin: Plugin): true | Error
     removePlugin(iconSet: string): true | Error
@@ -74,7 +84,11 @@ export class IconRegistry implements IconRegistryType {
 
         return true
     }
-    getIconSync(iconSet: string, group: string, name: string): iconExtractTry {
+    getIconSync(
+        iconSet: string,
+        group: string,
+        name: string
+    ): iconExtractTryType {
         const iconFullName: string = `${iconSet}__${group}__${name}`
         if (!(iconFullName in this.icons)) {
             return [new Error('Icon not exist in registry'), undefined]
@@ -82,13 +96,13 @@ export class IconRegistry implements IconRegistryType {
 
         return [undefined, this.icons[iconFullName]]
     }
-    getSymbolSync(iconSet: string, group: string, name: string): symbolTry {
+    getSymbolSync(iconSet: string, group: string, name: string): symbolTryType {
         const iconFullName: string = `${iconSet}__${group}__${name}`
         if (!(iconFullName in this.icons)) {
             return [new Error('Icon not exist in registry'), undefined]
         }
 
-        const icon: Icon = this.icons[iconFullName]
+        const icon: iconType = this.icons[iconFullName]
 
         const coverOneContent: (content: string) => string = (
             content: string
@@ -143,7 +157,7 @@ export class IconRegistry implements IconRegistryType {
         let contentToSprite: string = ''
 
         Object.keys(this.icons).map((iconFullName: string) => {
-            const icon: Icon = this.icons[iconFullName]
+            const icon: iconType = this.icons[iconFullName]
 
             const coverOneContent: (content: string) => string = (
                 content: string

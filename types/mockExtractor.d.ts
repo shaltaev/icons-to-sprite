@@ -1,2 +1,2 @@
-import { extractor } from './IconRegistry';
-export declare const mockExtractor: extractor;
+import { extractorType } from './IconRegistry';
+export declare const mockExtractor: extractorType;
