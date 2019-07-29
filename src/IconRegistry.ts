@@ -140,6 +140,36 @@ export class IconRegistry implements IconRegistryType {
     }
 
     compileSprite(): string {
-        return 'No implemented yet'
+        let contentToSprite: string = ''
+
+        Object.keys(this.icons).map((iconFullName: string) => {
+            const icon: Icon = this.icons[iconFullName]
+
+            const coverOneContent: (content: string) => string = (
+                content: string
+            ): string => `<path d="${content}"/>`
+
+            let allContent: string
+            if (Array.isArray(icon.content)) {
+                allContent = icon.content.map(coverOneContent).join('')
+            } else {
+                allContent = coverOneContent(icon.content)
+            }
+
+            const templateFulled: string = String.raw`<symbol id="${iconFullName}" viewBox="${
+                icon.viewBox[0]
+            } ${icon.viewBox[1]} ${icon.viewBox[2]} ${
+                icon.viewBox[3]
+            }">${allContent}</symbol>`
+
+            contentToSprite = `${contentToSprite}${templateFulled}`
+        })
+
+        const spriteTemplate: (content: string) => string = (
+            content: string
+        ): string =>
+            `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${content}</svg>`
+
+        return spriteTemplate(contentToSprite)
     }
 }
