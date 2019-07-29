@@ -59,8 +59,19 @@ export class IconRegistry implements IconRegistryType {
 
         return true
     }
-    removeIconSync(iconSet: string, group: string, name: string): Error {
-        return new Error('No implemented yet')
+    removeIconSync(iconSet: string, group: string, name: string): true | Error {
+        const iconFullName: string = `${iconSet}__${group}__${name}`
+        if (!(iconFullName in this.icons)) {
+            return new Error('Icon not exist in registry')
+        }
+
+        this.icons = Object.keys(this.icons)
+            .filter((key: string) => key !== iconFullName)
+            .reduce((acc: IconRegistryType['icons'], key: string) => {
+                return { ...acc, [key]: this.icons[key] }
+            }, {})
+
+        return true
     }
     getIconSync(iconSet: string, group: string, name: string): iconExtractTry {
         return [new Error('No implemented yet'), undefined]

@@ -1,4 +1,4 @@
-const ITERATION: number = 3
+const ITERATION: number = 4
 
 // tslint:disable-next-line: no-implicit-dependencies
 import { AtomicTestRegistry, iterate } from 'jest-atomic'
@@ -122,6 +122,26 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
     })
 }
 
+// ITERATION 4 :: Test 10 - :: Added 2019-07-28
+{
+    testRegistry.addTest(10, 'Implementation of Remove Icon Sync', () => {
+        if (!('test' in reg.plugins)) {
+            reg.addPlugin('test', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        }
+        if (!('test__primary__alert' in reg.icons)) {
+            reg.addIconSync('test', 'primary', 'alert')
+        }
+
+        expect(reg.removeIconSync('test', 'primary', 'alert')).toBe(true)
+        expect(reg.removeIconSync('test', 'primary', 'alert')).toStrictEqual(
+            Error('Icon not exist in registry')
+        )
+    })
+}
+
 // ALL TESTS :: END
 if (ITERATION === undefined) {
     throw new Error('please set valid env ITERATION')
@@ -167,5 +187,15 @@ toTest = iterate({
     toTestShadow: toTest,
     outdateTest: [0],
     newTest: [9],
+    iterationDescription: '003 Implementing Add icon'
+})
+
+toTest = iterate({
+    testRegistryShadow: testRegistry,
+    currentIterate: ITERATION,
+    iterateID: 4,
+    toTestShadow: toTest,
+    outdateTest: [1],
+    newTest: [10],
     iterationDescription: '003 Implementing Add icon'
 })
