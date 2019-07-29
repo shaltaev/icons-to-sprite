@@ -1,10 +1,12 @@
-const ITERATION: number = 2
+const ITERATION: number = 3
 
 // tslint:disable-next-line: no-implicit-dependencies
 import { AtomicTestRegistry, iterate } from 'jest-atomic'
 
 // TestScope :: START
-import { IconRegistry, mockExtractor, mockExtractorSync } from './IconRegistry'
+import { IconRegistry } from './IconRegistry'
+import { mockExtractorSync } from './mockExtractorSync'
+import { mockExtractor } from './mockExtractor'
 
 const reg: IconRegistry = new IconRegistry()
 // TestScope :: END
@@ -96,6 +98,30 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
     })
 }
 
+// ITERATION 3 :: Test 9 - :: Added 2019-07-28
+{
+    testRegistry.addTest(9, 'Implementation of Add Icon Sync', () => {
+        if (!('test' in reg.plugins)) {
+            reg.addPlugin('test', {
+                extractor: mockExtractor,
+                extractorSync: mockExtractorSync
+            })
+        }
+        expect(reg.addIconSync('never', 'some', 'alert')).toStrictEqual(
+            Error('Incorrect Set')
+        )
+        expect('test' in reg.plugins).toBe(true)
+        expect(reg.addIconSync('test', 'primary', 'alert')).toBe(true)
+        expect('test__primary__alert' in reg.icons).toBe(true)
+        expect(reg.addIconSync('test', 'primary', 'alert')).toStrictEqual(
+            Error('Icon is already added')
+        )
+        expect(reg.addIconSync('test', 'never', 'alert')).toStrictEqual(
+            Error('Icon not exist in this set and/or group')
+        )
+    })
+}
+
 // ALL TESTS :: END
 if (ITERATION === undefined) {
     throw new Error('please set valid env ITERATION')
@@ -132,4 +158,14 @@ toTest = iterate({
     newTest: [8],
     iterationDescription:
         '002 Nothing not implement, except Remove & Add plugin'
+})
+
+toTest = iterate({
+    testRegistryShadow: testRegistry,
+    currentIterate: ITERATION,
+    iterateID: 3,
+    toTestShadow: toTest,
+    outdateTest: [0],
+    newTest: [9],
+    iterationDescription: '003 Implementing Add icon'
 })

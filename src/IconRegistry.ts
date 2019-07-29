@@ -1,45 +1,11 @@
 type Icon = import('./Icon').Icon
 
-type iconMeta = {
-    iconSet: string
-    group: string
-    name: string
-}
-
-type iconExtractTry = [undefined, Icon | Icon[]] | [Error, undefined]
+export type iconExtractTry = [undefined, Icon | Icon[]] | [Error, undefined]
 type symbolTry = [undefined, string] | [Error, undefined]
 
-type extractorSync = (
-    iconSet: string,
-    group: string,
-    name: string
-) => iconExtractTry
+export type extractorSync = (group: string, name: string) => iconExtractTry
 
-export const mockExtractorSync: extractorSync = (
-    iconSet: string,
-    group: string,
-    name: string
-): iconExtractTry => {
-    return [new Error('This is mock ExtractorSync'), undefined]
-}
-
-type extractor = (
-    iconSet: string,
-    group: string,
-    name: string
-) => Promise<iconExtractTry>
-
-export const mockExtractor: extractor = async (
-    iconSet: string,
-    group: string,
-    name: string
-): Promise<iconExtractTry> => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve([new Error('This is mock Extractor'), undefined])
-        }, 2000)
-    })
-}
+export type extractor = (group: string, name: string) => Promise<iconExtractTry>
 
 type Plugin = {
     extractor: extractor
@@ -48,9 +14,8 @@ type Plugin = {
 
 type IconRegistryType = {
     icons: {
-        [fullName: string]: {
-            icon: Icon
-        } & iconMeta
+        [fullName: string]: // `${iconSet}__${group}__${name}`
+        Icon | Icon[]
     }
     plugins: {
         [iconSet: string]: // as Plugin Name
@@ -79,8 +44,20 @@ export class IconRegistry implements IconRegistryType {
         this.plugins = {}
     }
 
-    addIconSync(iconSet: string, group: string, name: string): Error {
-        return new Error('No implemented yet')
+    addIconSync(iconSet: string, group: string, name: string): true | Error {
+        if (!(iconSet in this.plugins)) {
+            return new Error('Incorrect Set')
+        }
+        if (`${iconSet}__${group}__${name}` in this.icons) {
+            return new Error('Icon is already added')
+        }
+        const [err, icon] = this.plugins[iconSet].extractorSync(group, name)
+        if (err !== undefined || icon === undefined) {
+            return new Error('Icon not exist in this set and/or group')
+        }
+        this.icons = { ...this.icons, [`${iconSet}__${group}__${name}`]: icon }
+
+        return true
     }
     removeIconSync(iconSet: string, group: string, name: string): Error {
         return new Error('No implemented yet')
