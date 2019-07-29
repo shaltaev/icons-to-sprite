@@ -1,6 +1,6 @@
 type Icon = import('./Icon').Icon
 
-export type iconExtractTry = [undefined, Icon | Icon[]] | [Error, undefined]
+export type iconExtractTry = [undefined, Icon] | [Error, undefined]
 type symbolTry = [undefined, string] | [Error, undefined]
 
 export type extractorSync = (group: string, name: string) => iconExtractTry
@@ -15,7 +15,7 @@ type Plugin = {
 type IconRegistryType = {
     icons: {
         [fullName: string]: // `${iconSet}__${group}__${name}`
-        Icon | Icon[]
+        Icon
     }
     plugins: {
         [iconSet: string]: // as Plugin Name
@@ -74,10 +74,39 @@ export class IconRegistry implements IconRegistryType {
         return true
     }
     getIconSync(iconSet: string, group: string, name: string): iconExtractTry {
-        return [new Error('No implemented yet'), undefined]
+        const iconFullName: string = `${iconSet}__${group}__${name}`
+        if (!(iconFullName in this.icons)) {
+            return [new Error('Icon not exist in registry'), undefined]
+        }
+
+        return [undefined, this.icons[iconFullName]]
     }
     getSymbolSync(iconSet: string, group: string, name: string): symbolTry {
-        return [new Error('No implemented yet'), undefined]
+        const iconFullName: string = `${iconSet}__${group}__${name}`
+        if (!(iconFullName in this.icons)) {
+            return [new Error('Icon not exist in registry'), undefined]
+        }
+
+        const icon: Icon = this.icons[iconFullName]
+
+        const coverOneContent: (content: string) => string = (
+            content: string
+        ): string => `<path d="${content}"/>`
+
+        let allContent: string
+        if (Array.isArray(icon.content)) {
+            allContent = icon.content.map(coverOneContent).join('')
+        } else {
+            allContent = coverOneContent(icon.content)
+        }
+
+        const templateFulled: string = String.raw`<symbol id="${iconFullName}" viewBox="${
+            icon.viewBox[0]
+        } ${icon.viewBox[1]} ${icon.viewBox[2]} ${
+            icon.viewBox[3]
+        }">${allContent}</symbol>`
+
+        return [undefined, templateFulled]
     }
     compileSpriteSync(): Error {
         return new Error('No implemented yet')
