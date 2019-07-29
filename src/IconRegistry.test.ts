@@ -40,9 +40,7 @@ const testRegistry: AtomicTestRegistry = new AtomicTestRegistry()
         ])
     })
     testRegistry.addTest(4, 'Compile Sprite not implement', () => {
-        expect(reg.compileSpriteSync()).toStrictEqual(
-            Error('No implemented yet')
-        )
+        expect(reg.compileSprite()).toBe('No implemented yet')
     })
     testRegistry.addTest(5, 'Add plugin not implement', () => {
         expect(

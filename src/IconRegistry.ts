@@ -27,10 +27,11 @@ type IconRegistryType = {
     removeIconSync(iconSet: string, group: string, name: string): true | Error
     getIconSync(iconSet: string, group: string, name: string): iconExtractTry
     getSymbolSync(iconSet: string, group: string, name: string): symbolTry
-    compileSpriteSync(): string | Error
 
     addPlugin(iconSet: string, plugin: Plugin): true | Error
     removePlugin(iconSet: string): true | Error
+
+    compileSprite(): string
 }
 
 /**
@@ -108,9 +109,7 @@ export class IconRegistry implements IconRegistryType {
 
         return [undefined, templateFulled]
     }
-    compileSpriteSync(): Error {
-        return new Error('No implemented yet')
-    }
+
     addPlugin(iconSet: string, plugin: Plugin): true | Error {
         if (iconSet in this.plugins) {
             return new Error('Plugin already registered')
@@ -126,7 +125,6 @@ export class IconRegistry implements IconRegistryType {
 
         return true
     }
-
     removePlugin(iconSet: string): true | Error {
         if (!(iconSet in this.plugins)) {
             return new Error('Plugin not exist in registry')
@@ -139,5 +137,9 @@ export class IconRegistry implements IconRegistryType {
             }, {})
 
         return true
+    }
+
+    compileSprite(): string {
+        return 'No implemented yet'
     }
 }
