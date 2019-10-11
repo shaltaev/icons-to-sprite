@@ -1,5 +1,6 @@
 const its = require('../dist')
 const itsPluginMaterial = require('its-plugin-material-design-icons')
+const itsPluginFontawesome = require('its-plugin-fontawesome-free')
 
 const fs = require('fs')
 
@@ -11,8 +12,15 @@ iconRegistry.addPlugin('mds', {
     extractorSync: itsPluginMaterial.extractorSync
 })
 
+iconRegistry.addPlugin('faf', {
+    extractor: its.mockExtractor,
+    extractorSync: itsPluginFontawesome.extractorSync
+})
+
 iconRegistry.addIconSync('mds', 'action', 'alarm')
 iconRegistry.addIconSync('mds', 'av', 'album')
+iconRegistry.addIconSync('faf', 'solid', 'ad')
+iconRegistry.addIconSync('faf', 'regular', 'angry')
 
 const spriteString = iconRegistry.compileSprite()
 

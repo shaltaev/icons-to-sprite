@@ -9,6 +9,7 @@
     "devDependencies": {
         "@types/jest": "^24.0.15",
         "@types/node": "^12.0.12",
+        "its-plugin-fontawesome-free": "^1.0.0",
         "its-plugin-material-design-icons": "^1.0.3",
         "jest": "^24.8.0",
         "jest-atomic": "^1.0.1",
